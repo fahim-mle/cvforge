@@ -1,0 +1,11 @@
+master_cv: "./data/master_cv.yaml"
+synonyms: "./data/synonyms.yaml"
+output_dir: "./output"
+default_template: "minimal"
+fuzzy_threshold: 85
+scorer_weights:
+  keyword: 0.6
+  format: 0.4
+web:
+  port: 8000
+  host: "127.0.0.1"

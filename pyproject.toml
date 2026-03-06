@@ -1,0 +1,51 @@
+[project]
+name = "cvforge"
+version = "0.1.0"
+description = "Local-first CLI + Web UI tool for tailoring CVs per job application, ATS scoring, and PDF export"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4.0",
+]
+
+# Future dependencies (add as needed in later phases):
+# Phase 2 (core engine):
+#   - spacy>=3.7
+#   - multi-rake>=0.0.1 or yake>=0.4.8
+#   - rapidfuzz>=3.0
+# Phase 3 (templates/PDF):
+#   - weasyprint>=60.0
+#   - jinja2>=3.1
+# Phase 4 (CLI):
+#   - typer>=0.12
+#   - rich>=13.0
+# Phase 5 (web backend):
+#   - fastapi>=0.110
+#   - uvicorn>=0.29
+
+# [project.scripts]
+# cvforge = "cli.main:app"  # Uncomment when CLI is implemented
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
