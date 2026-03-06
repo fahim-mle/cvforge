@@ -1,0 +1,4 @@
+javascript: ["js", "es6"]
+python: ["python3", "py"]
+react: ["reactjs", "react.js"]
+machine_learning: ["ml", "ml/ai"]

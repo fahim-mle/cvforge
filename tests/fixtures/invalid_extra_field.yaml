@@ -1,0 +1,24 @@
+personal:
+  name: "Test User"
+  email: "test@example.com"
+  phone: "0400 000 000"
+  location: "Brisbane, AU"
+  visa: "Citizen"
+  linkedin: "https://linkedin.com/in/test"
+  github: "https://github.com/test"
+  unknown_field: "This should trigger extra='forbid'"
+
+role_variants:
+  software_engineer:
+    title: "Software Engineer"
+    summary: "A test summary."
+    skill_priority: ["backend"]
+
+skill_groups:
+  - group: "Backend"
+    skills:
+      - name: "Python"
+        tags: ["backend"]
+
+experience: []
+education: []
