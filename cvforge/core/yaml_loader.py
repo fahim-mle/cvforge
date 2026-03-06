@@ -17,9 +17,12 @@ Errors surface as:
 from __future__ import annotations
 
 import logging
+import os
+import re
 from pathlib import Path
 from typing import Any
 
+import dotenv
 import yaml
 from pydantic import ValidationError
 
@@ -36,6 +39,9 @@ logger = logging.getLogger(__name__)
 
 # Default config file name looked up in the current working directory.
 _DEFAULT_CONFIG_NAME = "cvforge.yaml"
+
+# Matches ${VAR_NAME} tokens in YAML string values.
+_ENV_TOKEN_RE = re.compile(r"\$\{([^}]+)\}")
 
 
 # ---------------------------------------------------------------------------
@@ -64,6 +70,46 @@ def _read_yaml(path: Path) -> Any:
             return yaml.safe_load(fh)
     except yaml.YAMLError as exc:
         raise CVForgeValidationError(f"Failed to parse YAML file '{path}': {exc}") from exc
+
+
+def _resolve_env_vars(value: Any) -> Any:
+    """Recursively resolve ``${VAR_NAME}`` tokens in a parsed YAML structure.
+
+    Only string values are inspected; lists, dicts, and non-string scalars are
+    traversed or passed through unchanged.  Resolution uses ``os.environ`` so
+    callers must load ``.env`` before invoking this function.
+
+    Args:
+        value: Any Python value produced by ``yaml.safe_load``.
+
+    Returns:
+        The same structure with all ``${VAR_NAME}`` tokens replaced by their
+        environment variable values.
+
+    Raises:
+        CVForgeValidationError: If a referenced environment variable is not set.
+    """
+    if isinstance(value, str):
+
+        def _replace(match: re.Match[str]) -> str:
+            var_name = match.group(1)
+            env_value = os.environ.get(var_name)
+            if env_value is None:
+                raise CVForgeValidationError(
+                    f"Environment variable '{var_name}' is not set. Check your .env file."
+                )
+            return env_value
+
+        return _ENV_TOKEN_RE.sub(_replace, value)
+
+    if isinstance(value, dict):
+        return {k: _resolve_env_vars(v) for k, v in value.items()}
+
+    if isinstance(value, list):
+        return [_resolve_env_vars(item) for item in value]
+
+    # Non-string scalars (int, float, bool, None) pass through unchanged.
+    return value
 
 
 def _resolve_config_path(config_path: Path | None) -> Path:
@@ -147,9 +193,22 @@ def load_master_cv(cv_path: Path | None = None) -> MasterCV:
         # Resolve relative to the config file's parent so the tool works from
         # any working directory.
         cv_path = (config_path.parent / raw_cv_path).resolve()
+    else:
+        # When an explicit cv_path is given there is no config_path to derive
+        # the project root from, so fall back to the CV file's own parent.
+        config_path = cv_path.resolve().parent
 
     resolved = cv_path.resolve()
     logger.info("Loading master CV from: %s", resolved)
+
+    # Load .env from the project root (config file's parent) if it exists.
+    # override=False preserves any variables already set in the shell environment.
+    env_file = config_path.parent / ".env"
+    if env_file.exists():
+        dotenv.load_dotenv(env_file, override=False)
+        logger.debug("Loaded .env from: %s", env_file)
+    else:
+        logger.debug("No .env file found at: %s — relying on shell environment", env_file)
 
     raw: Any = _read_yaml(resolved)
 
@@ -157,6 +216,9 @@ def load_master_cv(cv_path: Path | None = None) -> MasterCV:
         raise CVForgeValidationError(
             f"Master CV file '{resolved}' must be a YAML mapping, got {type(raw).__name__}"
         )
+
+    # Resolve ${VAR_NAME} tokens throughout the raw dict before Pydantic sees it.
+    raw = _resolve_env_vars(raw)
 
     try:
         return MasterCV.model_validate(raw)

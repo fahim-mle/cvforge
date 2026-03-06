@@ -1,11 +1,11 @@
 personal:
-  name: "Alex Johnson"
-  email: "alex.johnson.dev@example.com"
-  phone: "0400 000 000"
-  location: "Brisbane, Queensland"
-  visa: "485 Graduate Temporary (Full Working Rights)"
-  linkedin: "https://linkedin.com/in/alexjohnson-dev"
-  github: "https://github.com/alexjohnson-dev"
+  name: "${CVFORGE_NAME}"
+  email: "${CVFORGE_EMAIL}"
+  phone: "${CVFORGE_PHONE}"
+  location: "${CVFORGE_LOCATION}"
+  visa: "${CVFORGE_VISA}"
+  linkedin: "${CVFORGE_LINKEDIN}"
+  github: "${CVFORGE_GITHUB}"
 
 # --- Role Variants ---
 # Each role_variant defines a title + summary + skill ordering + experience framing.

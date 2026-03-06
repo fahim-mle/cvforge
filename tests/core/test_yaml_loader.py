@@ -87,8 +87,17 @@ class TestLoadMasterCV:
         assert len(cv.education) == 1
         assert len(cv.certifications) == 0
 
-    def test_load_master_cv_personal_fields(self, sample_cv_path: Path) -> None:
+    def test_load_master_cv_personal_fields(self, sample_cv_path: Path, monkeypatch) -> None:
         """Verify all personal fields are populated and stripped."""
+        # Set test env vars to avoid depending on real .env values
+        monkeypatch.setenv("CVFORGE_NAME", "Alex Johnson")
+        monkeypatch.setenv("CVFORGE_EMAIL", "alex.johnson.dev@example.com")
+        monkeypatch.setenv("CVFORGE_PHONE", "0400 000 000")
+        monkeypatch.setenv("CVFORGE_LOCATION", "Brisbane, Queensland")
+        monkeypatch.setenv("CVFORGE_VISA", "485 Graduate Temporary (Full Working Rights)")
+        monkeypatch.setenv("CVFORGE_LINKEDIN", "https://linkedin.com/in/alexjohnson-dev")
+        monkeypatch.setenv("CVFORGE_GITHUB", "https://github.com/alexjohnson-dev")
+
         cv = load_master_cv(sample_cv_path)
 
         assert cv.personal.name == "Alex Johnson"
@@ -310,3 +319,175 @@ class TestLoadSynonyms:
             assert all(isinstance(alias, str) for alias in value), (
                 f"Not all aliases for {key!r} are strings"
             )
+
+
+# ---------------------------------------------------------------------------
+# TestEnvVarResolution
+# ---------------------------------------------------------------------------
+
+
+class TestEnvVarResolution:
+    """Test suite for environment variable resolution in YAML files."""
+
+    def test_resolve_env_vars_in_master_cv(self, sample_cv_path: Path, monkeypatch) -> None:
+        """Verify env vars are resolved in master_cv.yaml personal section."""
+        # Set test env vars
+        monkeypatch.setenv("CVFORGE_NAME", "Test Name")
+        monkeypatch.setenv("CVFORGE_EMAIL", "test@example.com")
+        monkeypatch.setenv("CVFORGE_PHONE", "1234567890")
+        monkeypatch.setenv("CVFORGE_LOCATION", "Test City")
+        monkeypatch.setenv("CVFORGE_VISA", "Test Visa")
+        monkeypatch.setenv("CVFORGE_LINKEDIN", "https://linkedin.com/in/test")
+        monkeypatch.setenv("CVFORGE_GITHUB", "https://github.com/test")
+
+        cv = load_master_cv(sample_cv_path)
+
+        # Verify all personal fields match the monkeypatched values
+        assert cv.personal.name == "Test Name"
+        assert cv.personal.email == "test@example.com"
+        assert cv.personal.phone == "1234567890"
+        assert cv.personal.location == "Test City"
+        assert cv.personal.visa == "Test Visa"
+        assert cv.personal.linkedin == "https://linkedin.com/in/test"
+        assert cv.personal.github == "https://github.com/test"
+
+    def test_missing_env_var_raises(self, tmp_path: Path) -> None:
+        """Verify CVForgeValidationError is raised when env var is missing."""
+        cv_with_missing_var = tmp_path / "cv_missing_var.yaml"
+        cv_with_missing_var.write_text(
+            """
+personal:
+  name: "${MISSING_VAR}"
+  email: "test@example.com"
+  phone: "0400 000 000"
+  location: "Brisbane, AU"
+  visa: "Citizen"
+  linkedin: "https://linkedin.com/in/test"
+  github: "https://github.com/test"
+
+role_variants:
+  software_engineer:
+    title: "Software Engineer"
+    summary: "Test summary"
+    skill_priority: ["backend"]
+
+skill_groups:
+  - group: "Backend"
+    skills:
+      - name: "Python"
+        aliases: []
+        tags: ["backend"]
+
+experience:
+  - company: "Test Company"
+    location: "Brisbane, AU"
+    start: "2024-01"
+    end: "2024-12"
+    role_variants:
+      software_engineer: "Software Engineer"
+    tags: ["backend"]
+    highlights:
+      - text: "Built a test application"
+        tags: ["backend"]
+
+education:
+  - degree: "Bachelor of CS"
+    institution: "Test University"
+    location: "Brisbane, AU"
+    end: "2023-12"
+    tags: ["cs"]
+""",
+            encoding="utf-8",
+        )
+
+        with pytest.raises(
+            CVForgeValidationError, match="Environment variable 'MISSING_VAR' is not set"
+        ):
+            load_master_cv(cv_with_missing_var)
+
+    def test_non_string_values_pass_through(self, tmp_path: Path, monkeypatch) -> None:
+        """Verify non-string values (ints, bools) are unchanged by env var resolution."""
+        monkeypatch.setenv("TEST_NAME", "Test User")
+
+        cv_with_mixed_types = tmp_path / "cv_mixed_types.yaml"
+        cv_with_mixed_types.write_text(
+            """
+personal:
+  name: "${TEST_NAME}"
+  email: "test@example.com"
+  phone: "0400 000 000"
+  location: "Brisbane, AU"
+  visa: "Citizen"
+  linkedin: "https://linkedin.com/in/test"
+  github: "https://github.com/test"
+
+role_variants:
+  software_engineer:
+    title: "Software Engineer"
+    summary: "Test summary"
+    skill_priority: ["backend"]
+
+skill_groups:
+  - group: "Backend"
+    skills:
+      - name: "Python"
+        aliases: []
+        tags: ["backend"]
+
+experience:
+  - company: "Test Company"
+    location: "Brisbane, AU"
+    start: "2024-01"
+    end: "2024-12"
+    role_variants:
+      software_engineer: "Software Engineer"
+    tags: ["backend"]
+    highlights:
+      - text: "Built a test application"
+        tags: ["backend"]
+
+education:
+  - degree: "Bachelor of CS"
+    institution: "Test University"
+    location: "Brisbane, AU"
+    end: "2023-12"
+    tags: ["cs"]
+""",
+            encoding="utf-8",
+        )
+
+        cv = load_master_cv(cv_with_mixed_types)
+
+        # Verify env var was resolved
+        assert cv.personal.name == "Test User"
+
+        # Verify non-string values remain unchanged
+        assert isinstance(cv.role_variants["software_engineer"].skill_priority, list)
+        assert cv.role_variants["software_engineer"].skill_priority == ["backend"]
+
+    def test_env_vars_not_resolved_in_non_personal_sections(
+        self, sample_cv_path: Path, monkeypatch
+    ) -> None:
+        """Verify experience/skills data loads correctly regardless of env vars."""
+        # Set test env vars for personal section
+        monkeypatch.setenv("CVFORGE_NAME", "Test Name")
+        monkeypatch.setenv("CVFORGE_EMAIL", "test@example.com")
+        monkeypatch.setenv("CVFORGE_PHONE", "1234567890")
+        monkeypatch.setenv("CVFORGE_LOCATION", "Test City")
+        monkeypatch.setenv("CVFORGE_VISA", "Test Visa")
+        monkeypatch.setenv("CVFORGE_LINKEDIN", "https://linkedin.com/in/test")
+        monkeypatch.setenv("CVFORGE_GITHUB", "https://github.com/test")
+
+        cv = load_master_cv(sample_cv_path)
+
+        # Verify experience data loads correctly (no tokens in these sections)
+        assert len(cv.experience) == 5
+        assert cv.experience[0].company == "Queensland Cyber Infrastructure Federation (QCIF)"
+
+        # Verify skills data loads correctly
+        assert len(cv.skill_groups) == 7
+        assert cv.skill_groups[0].group == "Programming & Query Languages"
+
+        # Verify role variants load correctly
+        assert len(cv.role_variants) == 3
+        assert "software_engineer" in cv.role_variants
