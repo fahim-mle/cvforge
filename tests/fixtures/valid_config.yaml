@@ -1,0 +1,4 @@
+master_cv: "./valid_minimal_cv.yaml"
+synonyms: "./valid_synonyms.yaml"
+output_dir: "./output"
+default_template: "minimal"

@@ -1,0 +1,40 @@
+personal:
+  name: "Test User"
+  email: "test@example.com"
+  phone: "0400 000 000"
+  location: "Brisbane, AU"
+  visa: "Citizen"
+  linkedin: "https://linkedin.com/in/test"
+  github: "https://github.com/test"
+
+role_variants:
+  software_engineer:
+    title: "Software Engineer"
+    summary: "A test summary for software engineer role."
+    skill_priority: ["backend"]
+
+skill_groups:
+  - group: "Backend"
+    skills:
+      - name: "Python"
+        aliases: ["python3"]
+        tags: ["backend"]
+
+experience:
+  - company: "Test Company"
+    location: "Brisbane, AU"
+    start: "2024-01"
+    end: "2024-12"
+    role_variants:
+      software_engineer: "Software Engineer"
+    tags: ["backend"]
+    highlights:
+      - text: "Built a test application"
+        tags: ["backend"]
+
+education:
+  - degree: "Bachelor of Computer Science"
+    institution: "Test University"
+    location: "Brisbane, AU"
+    end: "2023-12"
+    tags: ["cs"]
