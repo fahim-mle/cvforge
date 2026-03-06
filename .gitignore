@@ -1,0 +1,60 @@
+# =============================================================================
+# CVForge .gitignore
+# =============================================================================
+
+# --- Agent / AI tool directories (local-only, no value in repo) ---
+.agent/
+.claude/
+.codex/
+.gemini/
+.qwen/
+
+# --- OpenCode internals (keep .opencode/ skills, commands, agents — ignore deps) ---
+.opencode/node_modules/
+.opencode/bun.lock
+.opencode/package.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.whl
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# --- Testing / Coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# --- Environment / Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Generated output ---
+output/
+
+# --- OS ---
+Thumbs.db
+.DS_Store
