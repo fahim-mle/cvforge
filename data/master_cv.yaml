@@ -1,0 +1,334 @@
+personal:
+  name: "Alex Johnson"
+  email: "alex.johnson.dev@example.com"
+  phone: "0400 000 000"
+  location: "Brisbane, Queensland"
+  visa: "485 Graduate Temporary (Full Working Rights)"
+  linkedin: "https://linkedin.com/in/alexjohnson-dev"
+  github: "https://github.com/alexjohnson-dev"
+
+# --- Role Variants ---
+# Each role_variant defines a title + summary + skill ordering + experience framing.
+# The tailoring engine selects the closest variant based on JD match, then fine-tunes.
+role_variants:
+  software_engineer:
+    title: "Software Engineer"
+    summary: >
+      Full-stack Software Engineer with 4+ years building scalable web applications
+      and leading engineering teams. Combines strong React/Node.js expertise with
+      recent Master's in Data Science to deliver high-performance, data-informed
+      products. Reduced platform load times by 50% for 100K+ users through
+      optimization and collaborative problem-solving. Thrives in team-oriented
+      environments that value technical craftsmanship and continuous learning.
+    skill_priority: ["frontend", "backend", "devops", "data-science"]
+
+  ml_engineer:
+    title: "Machine Learning Engineer"
+    summary: >
+      Data and Machine Learning Engineer with 4+ years of industry experience
+      building data-driven systems, applied machine learning pipelines, and
+      production analytics platforms. Strong background in Python, machine learning,
+      data engineering, and cloud-based deployments, complemented by hands-on
+      experience delivering secure federated learning systems and predictive
+      analytics solutions. Proven ability to translate business and research
+      requirements into scalable, production-ready ML and data solutions.
+    skill_priority: ["ml", "data-engineering", "analytics", "devops", "frontend"]
+
+  data_engineer:
+    title: "Data Engineer"
+    summary_base: "ml_engineer"  # Reuse ML engineer summary as a starting point
+    skill_priority: ["data-engineering", "ml", "devops", "backend"]
+
+# --- Skills ---
+# Grouped by category for rendering; each skill tagged for matching.
+skill_groups:
+  - group: "Programming & Query Languages"
+    skills:
+      - name: "Python"
+        aliases: ["python3"]
+        tags: ["backend", "data-science", "ml", "data-engineering"]
+      - name: "SQL"
+        aliases: []
+        tags: ["backend", "data-engineering", "analytics"]
+      - name: "Bash"
+        aliases: ["shell", "shell scripting"]
+        tags: ["devops", "backend"]
+      - name: "JavaScript"
+        aliases: ["JS", "ES6", "ES6+", "ECMAScript"]
+        tags: ["frontend", "fullstack"]
+      - name: "TypeScript"
+        aliases: ["TS"]
+        tags: ["frontend", "fullstack"]
+      - name: "C#"
+        aliases: ["csharp", "c-sharp"]
+        tags: ["backend"]
+
+  - group: "Frontend Development"
+    tags: ["frontend"]
+    skills:
+      - name: "React.js"
+        aliases: ["React", "ReactJS"]
+        tags: ["frontend"]
+      - name: "HTML5"
+        aliases: ["HTML"]
+        tags: ["frontend"]
+      - name: "CSS3"
+        aliases: ["CSS"]
+        tags: ["frontend"]
+      - name: "SCSS"
+        aliases: ["Sass"]
+        tags: ["frontend"]
+      - name: "Tailwind"
+        aliases: ["Tailwind CSS", "TailwindCSS"]
+        tags: ["frontend"]
+      - name: "Responsive Design"
+        aliases: []
+        tags: ["frontend"]
+      - name: "Performance Optimization"
+        aliases: []
+        tags: ["frontend"]
+      - name: "Unit Testing"
+        aliases: ["Jest", "React Testing Library"]
+        tags: ["frontend", "testing"]
+
+  - group: "Backend & Databases"
+    skills:
+      - name: "Express"
+        aliases: ["Express.js"]
+        tags: ["backend"]
+      - name: "REST APIs"
+        aliases: ["RESTful APIs", "REST"]
+        tags: ["backend", "fullstack"]
+      - name: "GraphQL"
+        aliases: []
+        tags: ["backend", "frontend"]
+      - name: "Authentication & RBAC"
+        aliases: ["Auth", "RBAC", "OAuth"]
+        tags: ["backend", "security"]
+      - name: "PostgreSQL"
+        aliases: ["Postgres", "psql"]
+        tags: ["backend", "data-engineering"]
+      - name: "MongoDB"
+        aliases: ["Mongo"]
+        tags: ["backend"]
+      - name: "Redis"
+        aliases: []
+        tags: ["backend"]
+
+  - group: "Data Engineering"
+    skills:
+      - name: "Data Pipelines"
+        aliases: ["ETL", "ELT", "ETL/ELT"]
+        tags: ["data-engineering"]
+      - name: "Feature Engineering"
+        aliases: []
+        tags: ["data-engineering", "ml"]
+      - name: "Data Cleaning"
+        aliases: ["Data Wrangling"]
+        tags: ["data-engineering", "analytics"]
+      - name: "Synthetic Data Generation"
+        aliases: []
+        tags: ["data-engineering", "ml"]
+      - name: "Data Validation"
+        aliases: []
+        tags: ["data-engineering"]
+
+  - group: "Machine Learning"
+    skills:
+      - name: "Scikit-learn"
+        aliases: ["sklearn"]
+        tags: ["ml", "data-science"]
+      - name: "PyTorch"
+        aliases: []
+        tags: ["ml", "deep-learning"]
+      - name: "Predictive Modelling"
+        aliases: ["Predictive Modeling"]
+        tags: ["ml", "data-science"]
+      - name: "Model Training & Evaluation"
+        aliases: []
+        tags: ["ml"]
+      - name: "Model Deployment"
+        aliases: []
+        tags: ["ml", "devops"]
+      - name: "Federated Learning"
+        aliases: []
+        tags: ["ml", "security", "distributed-systems"]
+
+  - group: "Analytics & Visualisation"
+    skills:
+      - name: "Pandas"
+        aliases: []
+        tags: ["analytics", "data-science"]
+      - name: "NumPy"
+        aliases: []
+        tags: ["analytics", "data-science"]
+      - name: "Matplotlib"
+        aliases: []
+        tags: ["analytics", "data-viz"]
+      - name: "Power BI"
+        aliases: []
+        tags: ["analytics", "data-viz"]
+      - name: "Tableau"
+        aliases: []
+        tags: ["analytics", "data-viz"]
+      - name: "Exploratory Data Analysis"
+        aliases: ["EDA"]
+        tags: ["analytics", "data-science"]
+
+  - group: "DevOps & Engineering Practices"
+    skills:
+      - name: "Docker"
+        aliases: ["Docker Compose"]
+        tags: ["devops"]
+      - name: "Git"
+        aliases: ["GitHub", "Git/GitHub"]
+        tags: ["devops"]
+      - name: "CI/CD"
+        aliases: ["GitHub Actions", "CI", "CICD"]
+        tags: ["devops"]
+      - name: "Linux"
+        aliases: ["Ubuntu", "Debian"]
+        tags: ["devops"]
+      - name: "Azure Machine Learning"
+        aliases: ["Azure ML"]
+        tags: ["devops", "ml", "cloud"]
+      - name: "Agile/Scrum"
+        aliases: ["Agile", "Scrum"]
+        tags: ["process"]
+      - name: "Code Reviews"
+        aliases: []
+        tags: ["process"]
+
+# --- Experience ---
+# Each role has role_variants to control title/framing per CV type.
+# Highlights are individually tagged for granular selection.
+experience:
+  - company: "Queensland Cyber Infrastructure Federation (QCIF)"
+    location: "Brisbane, AU"
+    start: "2025-09"
+    end: "2025-12"
+    role_variants:
+      software_engineer: "Software Engineer (ML Security Engineer)"
+      ml_engineer: "Machine Learning Engineer (Security & Distributed Systems)"
+      data_engineer: "Data Engineer (Distributed Systems)"
+    tags: ["ml", "security", "devops", "distributed-systems"]
+    highlights:
+      - text: "Designed and deployed a secure, containerised federated learning environment using Docker and Docker Compose, validating up to 4 concurrent federated nodes on a local testbed with a computer vision dataset"
+        tags: ["ml", "devops", "docker", "federated-learning"]
+      - text: "Architected the system for horizontal scaling beyond local hardware constraints, separating server and client components to support multi-organisation deployments"
+        tags: ["architecture", "distributed-systems", "scalability"]
+      - text: "Automated end-to-end provisioning with shell scripts, reducing environment setup time from several hours to under 30 minutes"
+        tags: ["devops", "automation", "bash"]
+        variant_only: ["software_engineer"]
+      - text: "Implemented privacy-preserving service communication using mTLS, OpenVPN, and Keycloak (OIDC), enabling ML training without direct data transfer"
+        tags: ["security", "ml", "devops"]
+      - text: "Conducted system testing to identify bottlenecks and security risks, producing actionable recommendations for production readiness"
+        tags: ["testing", "security", "performance"]
+      - text: "Authored comprehensive deployment and security documentation"
+        tags: ["documentation"]
+
+  - company: "Sarina Russo Group"
+    location: "Brisbane, AU"
+    start: "2025-05"
+    end: "2025-08"
+    role_variants:
+      software_engineer: "Software Engineer (Data and Analytics)"
+      ml_engineer: "Data Engineer"
+      data_engineer: "Data Engineer"
+    tags: ["data-engineering", "ml", "analytics"]
+    highlights:
+      - text: "Built a complete predictive analytics pipeline (research, feature engineering, training, deployment) to identify at-risk students and support early intervention"
+        tags: ["ml", "data-engineering", "pipeline"]
+      - text: "Designed and delivered an interactive Power BI dashboard used by academic and support staff, replacing spreadsheet-based reporting"
+        tags: ["analytics", "data-viz", "power-bi"]
+      - text: "Generated synthetic datasets to validate model behaviour under data privacy constraints"
+        tags: ["data-engineering", "ml", "privacy"]
+      - text: "Produced user documentation and led a client handover, allowing continued use without ongoing engineering support"
+        tags: ["documentation", "stakeholder-management"]
+
+  - company: "Gain Solutions"
+    location: "Dhaka, Bangladesh"
+    start: "2021-09"
+    end: "2023-11"
+    role_variants:
+      software_engineer: "Frontend Team Lead"
+      ml_engineer: "Frontend Team Lead"
+      data_engineer: "Frontend Team Lead"
+    tags: ["frontend", "leadership", "performance"]
+    highlights:
+      - text: "Led frontend development for a property platform serving 650+ partner organisations and 100,000+ users"
+        tags: ["frontend", "leadership", "large-scale"]
+      - text: "Implemented key platform features including Google Maps–based property search, real-time chat, and comprehensive settings module"
+        tags: ["frontend", "react", "fullstack"]
+        variant_only: ["software_engineer"]
+      - text: "Reduced modal and table rendering time from ~7s to ~1.3s using React optimisation techniques (React.memo, useMemo, useCallback)"
+        tags: ["frontend", "performance", "react"]
+      - text: "Cut partner dashboard load time by ~50%, directly improving usability and partner engagement"
+        tags: ["frontend", "performance"]
+      - text: "Led and mentored a team of 4 frontend developers, enforcing coding standards in an Agile environment"
+        tags: ["leadership", "mentoring", "agile"]
+        variant_only: ["software_engineer"]
+      - text: "Collaborated with product and engineering teams to support data-informed decisions on a large-scale property platform"
+        tags: ["analytics", "product", "collaboration"]
+        variant_only: ["ml_engineer", "data_engineer"]
+
+  - company: "Ideaxen"
+    location: "Dhaka, Bangladesh"
+    start: "2020-08"
+    end: "2021-07"
+    role_variants:
+      software_engineer: "Junior Software Developer"
+      ml_engineer: "Junior Software Developer"
+    tags: ["backend", "erp"]
+    highlights:
+      - text: "Engineered core modules for a comprehensive ERP solution, focusing on complex inventory management systems"
+        tags: ["backend", "erp"]
+      - text: "Implemented Code First approach using C# .NET MVC to design database schemas and business logic layers"
+        tags: ["backend", "csharp", "database"]
+      - text: "Developed automated tracking for stock movements, ensuring data accuracy across multi-warehouse environments"
+        tags: ["backend", "data-integrity", "automation"]
+
+  - company: "Bluebeak.ai"
+    location: "Remote"
+    start: "2018-07"
+    end: "2019-08"
+    role_variants:
+      ml_engineer: "Data Analyst"
+      data_engineer: "Data Analyst"
+    tags: ["analytics", "data-science"]
+    show_for: ["ml_engineer", "data_engineer"]
+    highlights:
+      - text: "Leveraged R, sparklyr, and dplyr to manipulate and clean massive datasets for AI-driven predictive modeling"
+        tags: ["data-engineering", "analytics", "r"]
+      - text: "Conducted exploratory data analysis to identify patterns in user behavior, contributing to AI algorithm optimization"
+        tags: ["analytics", "eda", "data-science"]
+      - text: "Streamlined data workflows to reduce processing time for high-volume datasets"
+        tags: ["data-engineering", "performance"]
+
+# --- Education ---
+education:
+  - degree: "Master of Data Science (Professional)"
+    institution: "James Cook University Brisbane"
+    location: "Brisbane, AU"
+    start: "2024-03"
+    end: "2025-12"
+    tags: ["data-science", "ml"]
+    highlights:
+      - text: "Completed two industry placements: Federated Learning (QCIF) and Predictive Analytics (Sarina Russo Group)"
+        tags: ["ml", "data-engineering"]
+      - text: "Relevant Coursework: Data Mining and Machine Learning, Statistical Modeling, Database Modelling"
+        tags: ["ml", "data-science", "database"]
+      - text: "CGPA: 6.14/7.00"
+        tags: []
+
+  - degree: "Computer Science and Engineering"
+    institution: "American International University Bangladesh (AIUB)"
+    location: "Dhaka, Bangladesh"
+    end: "2020-03"
+    tags: ["cs", "fullstack", "backend"]
+
+# --- Certifications ---
+certifications:
+  - name: "Node.js Microservice Certificate"
+    issuer: "Tecognize Training"
+    tags: ["backend", "nodejs"]
