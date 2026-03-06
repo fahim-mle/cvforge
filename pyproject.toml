@@ -8,6 +8,9 @@ dependencies = [
     "pydantic>=2.0",
     "python-dotenv>=1.0",
     "pyyaml>=6.0",
+    "spacy>=3.7",
+    "yake>=0.4.8",
+    "rapidfuzz>=3.0",
 ]
 
 [project.optional-dependencies]
@@ -17,10 +20,7 @@ dev = [
 ]
 
 # Future dependencies (add as needed in later phases):
-# Phase 2 (core engine):
-#   - spacy>=3.7
-#   - multi-rake>=0.0.1 or yake>=0.4.8
-#   - rapidfuzz>=3.0
+# Phase 2 (core engine): ✓ Added spacy, yake, rapidfuzz
 # Phase 3 (templates/PDF):
 #   - weasyprint>=60.0
 #   - jinja2>=3.1

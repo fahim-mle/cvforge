@@ -1,4 +1,4 @@
-"""Pydantic data models for the CVForge master CV schema.
+"""Pydantic data models for the CVForge master CV schema and JD parse output.
 
 These models are the foundational data layer — every module in the system
 (YAML loader, tailoring engine, ATS scorer, template renderer) consumes them.
@@ -6,6 +6,8 @@ These models are the foundational data layer — every module in the system
 Model dependency order (leaf → root):
     Personal → RoleVariant → Skill → SkillGroup → Highlight → Experience
     → Education → Certification → MasterCV
+
+    JDKeywords → ParsedJD
 """
 
 from __future__ import annotations
@@ -24,6 +26,8 @@ __all__ = [
     "Education",
     "Certification",
     "MasterCV",
+    "JDKeywords",
+    "ParsedJD",
 ]
 
 # ---------------------------------------------------------------------------
@@ -348,3 +352,49 @@ class MasterCV(BaseModel):
     experience: list[Experience]
     education: list[Education]
     certifications: list[Certification] = Field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
+# JD Parse Output models
+# ---------------------------------------------------------------------------
+
+
+class JDKeywords(BaseModel):
+    """Classified keyword lists extracted from a job description.
+
+    Keywords are grouped by signal strength:
+    - ``required``: terms near "must", "required", "essential"
+    - ``preferred``: terms near "nice to have", "bonus", "preferred"
+    - ``soft_skills``: interpersonal/behavioural terms ("team player", "communication")
+
+    All lists contain normalized, deduplicated strings.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    required: list[str] = Field(default_factory=list)
+    preferred: list[str] = Field(default_factory=list)
+    soft_skills: list[str] = Field(default_factory=list)
+
+
+class ParsedJD(BaseModel):
+    """Structured output from parsing a raw job description.
+
+    Produced by ``jd_parser``, consumed by ``matcher`` and ``scorer``.
+    Not persisted to disk — lives in memory for the duration of a tailoring
+    session.
+
+    All fields are optional because not every JD contains every piece of
+    metadata; callers must handle ``None`` gracefully.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    # Extracted role title, e.g. "Senior Frontend Developer".
+    role: str | None = None
+    # Extracted company name, e.g. "Acme Inc".
+    company: str | None = None
+    # Classified keyword lists — always present, may contain empty sub-lists.
+    keywords: JDKeywords = Field(default_factory=JDKeywords)
+    # Minimum years of experience stated in the JD, e.g. 5.
+    experience_years: int | None = None
